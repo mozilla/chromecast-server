@@ -1,0 +1,114 @@
+<html>
+  <head>
+    <title>Example minimum receiver</title>
+    <script src="//www.gstatic.com/cast/sdk/libs/receiver/2.0.0/cast_receiver.js"></script>
+    <style>
+      body {
+      color: white;
+      }
+    </style>
+    <script src="adapter.js"></script>
+    <script src="mozdemo.js?5"></script>
+    <link rel='stylesheet' href="demostyle.css"></link>
+  </head>
+  <body>
+    <span>hello</span>
+    <span style="color:red">world 5</span>
+    <div id="header"><h2>TabCast: You are the sender</h2></div>
+    <div id="status"></div>
+    <div id="sender_inst">
+      <div>Open this link in another tab or browser</div>
+      <div> <a id="link">right click here</a></div>
+      <div>That other tab or browser will have text in a red box that you'll paste here:</div>
+      <textarea id="answer"></textarea>
+      <button onclick="answer_click()">submit answer</button>
+    </div>
+    <div style="display:none" id="receiver_inst">
+      <div>Copy this text and paste it into the input box of the sender tab</div>
+      <div style="border:thin red solid" id="answer_json"> </div>
+    </div>
+    <div>
+
+      <div id="remote">
+        <div id="remote-caption"><h2>Remote</h1></div>
+<div>
+  <video style="border:thin blue solid" id="video" width="320" height="240" autoplay="TRUE"></video><br/>
+</div><br/>
+</div>
+
+</div>
+<div style="color:green; font-size: xx-small;" id="logwindow"></div>
+
+
+<script>
+  //window.location.reload(true);
+  var me = "castee";
+  var them = "caster";
+  var start = false;
+  document.getElementById("sender_inst").style.display = "none";
+  document.getElementById("receiver_inst").style.display = "block";
+  document.getElementById("header").firstChild.innerHTML = "TabCast: You are the reciever";
+
+  var extra = {};
+  if (true ) {
+  extra.video=true;
+  }
+  if (false ) {
+  extra.audio=true;
+  }
+  if (true ) {
+  extra.demo=true;
+  }
+  if (false ) {
+  extra.turn_only=true;
+  }
+
+  var senderId = null;
+
+  var divs = {
+  local_video :  null,
+  remote_video : document.getElementById("video") ,
+  };
+  in_queue = [];
+  var client = new CallingClient({}, me, them, divs, start, extra);
+
+  window.onload = function() {
+    try {
+     cast.receiver.logger.setLevelValue(cast.receiver.LoggerLevel.DEBUG);
+      window.castReceiverManager = cast.receiver.CastReceiverManager.getInstance();
+
+      window.castReceiverManager.onSenderConnected = function(event) {
+        ui_log("sender connected: " + JSON.stringify(event));
+
+      }
+      window.castReceiverManager.onReady = function(event) {
+        ui_log("on ready");
+        try {
+        console.log("### Cast Receiver Manager is READY: " + JSON.stringify(event));
+        ui_log("onReady: " +  JSON.stringify(event));
+        } catch(e) {
+          ui_log(e);
+       }
+      }
+
+        window.messageBus = window.castReceiverManager.getCastMessageBus('urn:x-cast:org.mozilla.castin');
+        ui_log("bus: " + messageBus);
+        //window.messageBus.broadcast("broadcast");
+        window.messageBus.onMessage = function(event) {
+          ui_log("onMessage called with: " + event.data);
+          senderId = event.senderId;
+          //window.messageBus.send(event.senderId, "msg");
+          in_queue.push(event.data);
+          //ui_log("msg sent");
+        }
+
+      var appConfig = new cast.receiver.CastReceiverManager.Config();
+      appConfig.statusText = "let's cast";
+      appConfig.maxInactvity = 6000;
+      window.castReceiverManager.start(appConfig);
+
+    } catch(e) {ui_log(e);}
+  }
+</script>
+</body>
+</html>

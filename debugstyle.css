@@ -1,0 +1,13 @@
+#remote{
+     float:left;
+     width:45%;
+}
+
+#local {
+     float:right;
+     width:45%;
+}
+
+#logwindow{
+     clear:both;
+}

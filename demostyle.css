@@ -1,0 +1,33 @@
+#header {
+    display:none;
+}
+
+html, body {
+  margin:0;
+  padding:0;
+}
+
+#remote{
+     width:100%;
+     margin-left:250px;
+     margin-right:auto;
+}
+
+#remote-caption{
+     display:none;
+}
+
+#local {
+     display:none;
+     width:0px;
+}
+
+#logwindow{
+     clear:both;
+     display:none;
+}
+
+#status{
+     clear:both;
+     display:none;
+}
