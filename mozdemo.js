@@ -21,11 +21,6 @@ var color_log = function(msg, color) {
 var out_queue = []
 var in_queue = null;
 
-function answer_click() {
-  var textarea = document.getElementById("answer");
-  in_queue = JSON.parse(textarea.value);
-  console.log("got " + in_queue.length + " messages");
-}
 
 
 
