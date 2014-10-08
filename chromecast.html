@@ -1,88 +1,66 @@
 <html>
   <head>
-    <title>Example minimum receiver</title>
+    <title>Mozilla Tab Mirror</title>
     <script src="//www.gstatic.com/cast/sdk/libs/receiver/2.0.0/cast_receiver.js"></script>
     <style>
       body {
       color: yellow;
-      background-color: white;
+      background-color: black;
       }
     </style>
-    <script src="adapter.js?1"></script>
-    <script src="mozdemo.js?1"></script>
-    <link rel='stylesheet' href="demostyle.css?3"></link>
+    <script src="adapter.js"></script>
+    <script src="webrtcplayer.js"></script>
+    <link rel='stylesheet' href="demostyle.css"></link>
   </head>
   <body>
-      <video id="video" autoplay="TRUE"></video><br/>
-
-    <div style="color:green; font-size: xx-small;" id="logwindow"></div>
-
-
+    <video id="video" autoplay="TRUE"></video><br/>
     <script>
-      //window.location.reload(true);
-      var me = "castee";
-      var them = "caster";
-      var start = false;
-      var extra = {};
-      if (true ) {
-      extra.video=true;
-      }
-      if (false ) {
-      extra.audio=true;
-      }
-      if (true ) {
-      extra.demo=true;
-      }
-      if (false ) {
-      extra.turn_only=true;
-      }
 
-      var senderId = null;
+//Use this to force the chromecast to reload the application.
+//window.location.reload(true);
 
-      var divs = {
-      local_video :  null,
-      remote_video : document.getElementById("video") ,
-      };
-      in_queue = [];
-      var client = new CallingClient({}, me, them, divs, start, extra);
+var divs = {
+  remote_video : document.getElementById("video") ,
+};
 
-      window.onload = function() {
+var client = new CallingClient(divs);
+
+window.onload = function() {
+  try {
+    cast.receiver.logger.setLevelValue(cast.receiver.LoggerLevel.DEBUG);
+    window.castReceiverManager = cast.receiver.CastReceiverManager.getInstance();
+
+    window.castReceiverManager.onSenderConnected = function(event) {
+      log("sender connected: " + JSON.stringify(event));
+
+    }
+
+    window.castReceiverManager.onReady = function(event) {
+      log("on ready");
       try {
-      cast.receiver.logger.setLevelValue(cast.receiver.LoggerLevel.DEBUG);
-      window.castReceiverManager = cast.receiver.CastReceiverManager.getInstance();
-
-      window.castReceiverManager.onSenderConnected = function(event) {
-      ui_log("sender connected: " + JSON.stringify(event));
-
-      }
-      window.castReceiverManager.onReady = function(event) {
-      ui_log("on ready");
-      try {
-      console.log("### Cast Receiver Manager is READY: " + JSON.stringify(event));
-      ui_log("onReady: " +  JSON.stringify(event));
+        log("onReady: " +  JSON.stringify(event));
       } catch(e) {
-      ui_log(e);
+        log(e);
       }
-      }
+    }
 
-      window.messageBus = window.castReceiverManager.getCastMessageBus('urn:x-cast:org.mozilla.mirror');
-      ui_log("bus: " + messageBus);
-      //window.messageBus.broadcast("broadcast");
-      window.messageBus.onMessage = function(event) {
-      ui_log("onMessage called with: " + event.data);
-      senderId = event.senderId;
-      //window.messageBus.send(event.senderId, "msg");
-      in_queue.push(event.data);
-      //ui_log("msg sent");
-      }
+    window.messageBus = window.castReceiverManager.getCastMessageBus('urn:x-cast:org.mozilla.mirror');
+    log("bus: " + messageBus);
+    window.messageBus.onMessage = function(event) {
+      log("onMessage called with: " + event.data);
+      client.processEvent(event.senderId, event.data);
+    }
 
-      var appConfig = new cast.receiver.CastReceiverManager.Config();
-      appConfig.statusText = "let's cast";
-      appConfig.maxInactvity = 6000;
-      window.castReceiverManager.start(appConfig);
+    var appConfig = new cast.receiver.CastReceiverManager.Config();
+    appConfig.statusText = "let's cast";
+    appConfig.maxInactvity = 6000;
+    window.castReceiverManager.start(appConfig);
 
-      } catch(e) {ui_log(e);}
-      }
+  } catch(e) {
+    log(e);
+  }
+}
+
     </script>
   </body>
 </html>
