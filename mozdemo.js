@@ -3,6 +3,7 @@ function ui_log(msg) {
     color_log(msg, "green");
 }
 var color_log = function(msg, color) {
+/*
     var log = msg.replace("\\r\\n", "<br/>");
 
     var d = document.createElement("div");
@@ -16,6 +17,7 @@ var color_log = function(msg, color) {
     } else {
       node.appendChild(d);
     }
+*/
 };
 
 var out_queue = []
@@ -30,7 +32,8 @@ function ajax(params) {
     window.messageBus.send(senderId, params.data);
   } else {
     if (in_queue) {
-      params.success(in_queue.pop());
+      console.log("in_queue length: " + in_queue.length);
+      params.success(in_queue.shift());
     } else if (window.location.search) {
       var query = window.location.search.substring(1);
       in_queue = JSON.parse(decodeURIComponent(query));
@@ -139,7 +142,7 @@ var CallingClient = function(config_, username, peer, divs, start_call, other_pa
     };
 
     var process_ice_candidate = function(msg) {
-	log("Applying ICE candidate");
+	log("Applying ICE candidate: " + JSON.stringify(msg));
 	pc.addIceCandidate(new RTCIceCandidate(msg));
     };
 
