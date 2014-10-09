@@ -28,7 +28,6 @@ window.onload = function() {
     window.castReceiverManager = cast.receiver.CastReceiverManager.getInstance();
     window.castReceiverManager.onSenderConnected = function(event) {
       log("sender connected: " + JSON.stringify(event));
-
     }
     window.castReceiverManager.onReady = function(event) {
       log("on ready");
@@ -44,7 +43,6 @@ window.onload = function() {
       log("onMessage called with: " + event.data);
       client.processEvent(event.senderId, event.data);
     }
-
     var appConfig = new cast.receiver.CastReceiverManager.Config();
     appConfig.statusText = "let's cast";
     appConfig.maxInactvity = 6000;
