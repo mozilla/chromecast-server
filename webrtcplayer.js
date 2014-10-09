@@ -12,9 +12,9 @@ var CallingClient = function(divs) {
   var config = {}
   config.iceServers = [];
   config.iceServers.push({"url":"stun:stun.services.mozilla.com"});
-    
+
   this.pc = new RTCPeerConnection(config, {});
-    
+
   if (this.pc) {
     log("Created PC object");
   } else {
@@ -41,7 +41,7 @@ CallingClient.prototype = {
     this.senderId = senderId;
     log("Received raw message " + msg);
     var data = JSON.parse(msg);
-       
+
     log("Received message " + JSON.stringify(data));
 
     if (data) {
@@ -58,7 +58,7 @@ CallingClient.prototype = {
   },
 
 
-  // Signaling methods    
+  // Signaling methods
   _sendMessage: function(msg) {
     log("Sending: " + JSON.stringify(msg));
     window.messageBus.send(this.senderId, JSON.stringify(msg));
@@ -109,7 +109,7 @@ CallingClient.prototype = {
     log("New ICE candidate");
     this._sendMessage(candidate.candidate);
   },
- 
+
   _onSignalingStateChange: function() {
     log("Signaling state change. New state = " + this.pc.signalingState);
   },
