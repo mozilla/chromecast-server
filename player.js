@@ -1,10 +1,10 @@
-var failure = function(x) {
-  log("ERROR: " + JSON.stringify(x));
-};
-
 var log = function(msg) {
   // Uncomment to enable logging
   //console.log("LOG(CallingClient): " + msg);
+};
+
+var failure = function(x) {
+  log("ERROR: " + JSON.stringify(x));
 };
 
 var CallingClient = function(divs) {
