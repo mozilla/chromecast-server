@@ -50,7 +50,7 @@ if (navigator.mozGetUserMedia) {
 
   // The RTCPeerConnection object.
   RTCPeerConnection = webkitRTCPeerConnection;
-  
+
   // Get UserMedia (only difference is the prefix).
   // Code from Adam Barth.
   getUserMedia = navigator.webkitGetUserMedia.bind(navigator);

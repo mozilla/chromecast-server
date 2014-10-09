@@ -57,7 +57,6 @@ CallingClient.prototype = {
     }
   },
 
-
   // Signaling methods
   _sendMessage: function(msg) {
     log("Sending: " + JSON.stringify(msg));
