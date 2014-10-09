@@ -3,7 +3,8 @@ var failure = function(x) {
 };
 
 var log = function(msg) {
-  console.log("LOG(CallingClient): " + msg);
+  // Uncomment to enable logging
+  //console.log("LOG(CallingClient): " + msg);
 };
 
 var CallingClient = function(divs) {

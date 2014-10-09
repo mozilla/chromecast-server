@@ -4,7 +4,7 @@
     <script src="//www.gstatic.com/cast/sdk/libs/receiver/2.0.0/cast_receiver.js"></script>
     <style>
       body {
-      color: yellow;
+      color: white;
       background-color: black;
       }
     </style>
@@ -13,12 +13,8 @@
     <link rel='stylesheet' href="demostyle.css"></link>
   </head>
   <body>
-    <video id="video" autoplay="TRUE"></video><br/>
+    <video id="video" autoplay="true"></video><br/>
     <script>
-
-//Use this to force the chromecast to reload the application.
-//window.location.reload(true);
-
 var divs = {
   remote_video : document.getElementById("video") ,
 };
@@ -27,14 +23,13 @@ var client = new CallingClient(divs);
 
 window.onload = function() {
   try {
-    cast.receiver.logger.setLevelValue(cast.receiver.LoggerLevel.DEBUG);
+    // Uncomment to set logger level to DEBUG
+    //cast.receiver.logger.setLevelValue(cast.receiver.LoggerLevel.DEBUG);
     window.castReceiverManager = cast.receiver.CastReceiverManager.getInstance();
-
     window.castReceiverManager.onSenderConnected = function(event) {
       log("sender connected: " + JSON.stringify(event));
 
     }
-
     window.castReceiverManager.onReady = function(event) {
       log("on ready");
       try {
@@ -43,7 +38,6 @@ window.onload = function() {
         log(e);
       }
     }
-
     window.messageBus = window.castReceiverManager.getCastMessageBus('urn:x-cast:org.mozilla.mirror');
     log("bus: " + messageBus);
     window.messageBus.onMessage = function(event) {
@@ -55,12 +49,10 @@ window.onload = function() {
     appConfig.statusText = "let's cast";
     appConfig.maxInactvity = 6000;
     window.castReceiverManager.start(appConfig);
-
   } catch(e) {
     log(e);
   }
 }
-
     </script>
   </body>
 </html>
