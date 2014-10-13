@@ -14,7 +14,8 @@ var CallingClient = function(divs) {
   config.iceServers = [];
   config.iceServers.push({"url":"stun:stun.services.mozilla.com"});
 
-  this.pc = new RTCPeerConnection(config, {});
+  // webkitRTCPeerConnection is Chrome specific
+  this.pc = new webkitRTCPeerConnection(config, {});
 
   if (this.pc) {
     log("Created PC object");
@@ -25,7 +26,8 @@ var CallingClient = function(divs) {
   // Set callbacks or new media streams
   this.pc.onaddstream = function(obj) {
     log("Adding video stream");
-    attachMediaStream(divs.remote_video, obj.stream);
+    // This line is Chrome specific
+    divs.remote_video.src = webkitURL.createObjectURL(obj.stream);
   }
   this.pc.onicecandidate = this._onIceCandidate.bind(this);
   this.pc.onsignalingstatechange = this._onSignalingStateChange.bind(this);
