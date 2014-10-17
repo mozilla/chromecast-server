@@ -40,15 +40,9 @@ window.onload = function() {
       log("sender connected: " + JSON.stringify(event));
     }
     window.castReceiverManager.onReady = function(event) {
-      log("on ready");
-      try {
-        log("onReady: " +  JSON.stringify(event));
-      } catch(e) {
-        log(e);
-      }
+      log("onReady: " +  JSON.stringify(event));
     }
     window.messageBus = window.castReceiverManager.getCastMessageBus('urn:x-cast:org.mozilla.mirror');
-    log("bus: " + messageBus);
     window.messageBus.onMessage = function(event) {
       log("onMessage called with: " + event.data);
       client.processEvent(event.senderId, event.data);

@@ -10,9 +10,7 @@ var failure = function(x) {
 var CallingClient = function(divs) {
   log("Calling client constructor");
 
-  var config = {}
-  config.iceServers = [];
-  config.iceServers.push({"url":"stun:stun.services.mozilla.com"});
+  var config = {"iceServers":[{"url":"stun:stun.services.mozilla.com"}]};
 
   // webkitRTCPeerConnection is Chrome specific
   this.pc = new webkitRTCPeerConnection(config, {});
@@ -82,29 +80,14 @@ CallingClient.prototype = {
     this.pc.createAnswer(this._createAnswerSuccess.bind(this), failure);
   },
 
-  _setLocalSuccessAnswer: function(sdp) {
+  _setLocalAnswerSuccess: function(sdp) {
     log("Successfully applied local description: " + JSON.stringify(sdp));
-  },
-
-  _filterNonrelayCandidates: function(sdp) {
-    var lines = sdp.sdp.split("\r\n");
-    var lines2 = lines.filter(function(x) {
-      if (!/candidate/.exec(x)) {
-        return true;
-      } else if (/relay/.exec(x)) {
-        return true;
-      }
-      return false;
-    });
-
-    sdp.sdp = lines2.join("\r\n");
   },
 
   _createAnswerSuccess: function(sdp) {
     log("Successfully created answer " + JSON.stringify(sdp));
-    this._filterNonrelayCandidates(sdp);
     this._sendMessage(sdp);
-    this.pc.setLocalDescription(sdp, this._setLocalSuccessAnswer, failure);
+    this.pc.setLocalDescription(sdp, this._setLocalAnswerSuccess, failure);
   },
 
   _onIceCandidate: function (candidate) {
