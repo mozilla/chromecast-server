@@ -39,7 +39,12 @@ CallingClient.prototype = {
     if (!msg) {
       return;
     }
-    this.senderId = senderId;
+    if (!this.senderId) {
+      this.senderId = senderId;
+      this._sendMessage({ type: "size",
+                          width: window.innerWidth,
+                          height: window.innerHeight });
+    }
     log("Received raw message " + msg);
     var data = JSON.parse(msg);
 
